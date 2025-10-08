@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>함지수의 문제어때</title>
+    <title>문제 함 어때</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: auto; background-color: #f4f4f4; }
         h1 { text-align: center; color: #333; }
@@ -33,10 +33,33 @@
         #completion-message { text-align: center; font-size: 2em; color: #28a745; margin-top: 50px; }
         #quiz-progress { text-align: right; font-size: 1em; color: #666; margin-bottom: 10px; }
         #quiz-tag { font-size: 0.9em; color: #888; margin-top: 10px; }
+        /* 다크모드 스타일 추가 */
+        body.dark-mode { background-color: #181818; color: #e0e0e0; }
+        body.dark-mode h1,
+        body.dark-mode .question-title,
+        body.dark-mode #quiz-progress,
+        body.dark-mode #quiz-tag { color: #e0e0e0; }
+        body.dark-mode .question-container { background: #232323; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        body.dark-mode .answer-options label { background: #333; color: #e0e0e0; }
+        body.dark-mode .answer-options label:hover { background: #444; }
+        body.dark-mode .answer-input { background: #222; color: #e0e0e0; border: 1px solid #444; }
+        body.dark-mode #result.correct { background-color: #284d3d; color: #b6f7c1; border: 1px solid #3e7c5b; }
+        body.dark-mode #result.incorrect { background-color: #5a2323; color: #ffd6d6; border: 1px solid #a14a4a; }
+        body.dark-mode #description { background: #2c2c2c; border-left: 5px solid #f4b400; color: #e0e0e0; }
+        body.dark-mode #completion-message { color: #b6f7c1; }
+        body.dark-mode .button-group button { background-color: #333 !important; color: #e0e0e0 !important; }
+        body.dark-mode #submit-btn { background-color: #0056b3 !important; }
+        body.dark-mode #next-btn { background-color: #218838 !important; }
+        body.dark-mode #restart-btn { background-color: #5a6268 !important; }
+        body.dark-mode #correct-btn { background-color: #e3a500 !important; }
+        /* 토글 버튼 스타일 */
+        #mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 8px 16px; border-radius: 20px; border: none; background: #eee; color: #333; cursor: pointer; font-size: 1em; }
+        body.dark-mode #mode-toggle { background: #333; color: #e0e0e0; }
     </style>
 </head>
 <body>
-    <h1>함지수의 문제어때</h1>
+    <button id="mode-toggle">🌙 다크모드</button>
+    <h1>문제 함 어때</h1>
     <div id="question-area" class="question-container">
         <div id="quiz-progress"></div>
     </div>
@@ -47,6 +70,25 @@
         <button id="restart-btn">처음으로</button>
     </div>
     <script>
+        // 라이트/다크 모드 토글 기능
+        const modeToggle = document.getElementById('mode-toggle');
+        function setMode(mode) {
+            if (mode === 'dark') {
+                document.body.classList.add('dark-mode');
+                modeToggle.textContent = '☀️ 라이트모드';
+            } else {
+                document.body.classList.remove('dark-mode');
+                modeToggle.textContent = '🌙 다크모드';
+            }
+            localStorage.setItem('quiz-mode', mode);
+        }
+        modeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.contains('dark-mode');
+            setMode(isDark ? 'light' : 'dark');
+        });
+        // 페이지 로드 시 저장된 모드 적용
+        setMode(localStorage.getItem('quiz-mode') || 'light');
+
         document.addEventListener('DOMContentLoaded', () => {
             fetch('questions.csv')
                 .then(response => {
