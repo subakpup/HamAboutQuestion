@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>함지수의 문제어때</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: auto; background-color: #f4f4f4; }
+        h1 { text-align: center; color: #333; }
+        .question-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .question-title { font-size: 1.5em; color: #333; margin-bottom: 10px; }
+        .question-img { max-width: 100%; height: auto; display: block; margin-top: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; }
+        .answer-input { width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; }
+        .answer-options { display: flex; flex-direction: column; gap: 10px; }
+        .answer-options label { background: #eee; padding: 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+        .answer-options label:hover { background: #ddd; }
+        .button-group { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        .button-row { display: flex; gap: 10px; }
+        .button-group button { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        #submit-btn { background-color: #007BFF; color: white; }
+        #submit-btn:hover { background-color: #0056b3; }
+        #next-btn { background-color: #28a745; color: white; }
+        #next-btn:hover { background-color: #218838; }
+        #restart-btn { background-color: #6c757d; color: white; }
+        #restart-btn:hover { background-color: #5a6268; }
+        #correct-btn { background-color: #f4b400; color: white; }
+        #correct-btn:hover { background-color: #e3a500; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 5px; }
+        #result.correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        #result.incorrect { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        #description { margin-top: 15px; background: #e9ecef; padding: 15px; border-radius: 5px; border-left: 5px solid #007BFF; }
+        #description-header { font-size: 1.2em; font-weight: bold; margin-bottom: 5px; }
+        #completion-message { text-align: center; font-size: 2em; color: #28a745; margin-top: 50px; }
+        #quiz-progress { text-align: right; font-size: 1em; color: #666; margin-bottom: 10px; }
+        #quiz-tag { font-size: 0.9em; color: #888; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>함지수의 문제어때</h1>
+    <div id="question-area" class="question-container">
+        <div id="quiz-progress"></div>
+    </div>
+    <div id="result"></div>
+    <div id="completion-message" style="display:none;">
+        <p>🎉 퀴즈 완료! 모든 문제를 푸셨습니다.</p>
+        <div id="quiz-summary"></div>
+        <button id="restart-btn">처음으로</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('questions.csv')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('questions.csv 파일을 찾을 수 없습니다.');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    const questions = parseCSV(data);
+                    
+                    if (questions.length === 0) {
+                        document.getElementById('question-area').innerHTML = '<p style="text-align:center; color:red;">파일에 유효한 문제가 없거나, 형식이 올바르지 않습니다.</p>';
+                        return;
+                    }
+
+                    function shuffleArray(array) {
+                        for (let i = array.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [array[i], array[j]] = [array[j], array[i]];
+                        }
+                    }
+
+                    let correctAnswers = 0;
+                    const totalQuestions = questions.length;
+                    let currentQuestionIndex = 0;
+
+                    function startQuiz() {
+                        shuffleArray(questions);
+                        correctAnswers = 0;
+                        currentQuestionIndex = 0;
+                        document.getElementById('result').style.display = 'block';
+                        document.getElementById('question-area').style.display = 'block';
+                        document.getElementById('completion-message').style.display = 'none';
+                        displayQuestion(questions[currentQuestionIndex]);
+                    }
+                    
+                    startQuiz();
+
+                    function escapeHTML(text) {
+                        const div = document.createElement('div');
+                        div.textContent = text;
+                        return div.innerHTML;
+                    }
+
+                    function displayQuestion(question) {
+                        const qArea = document.getElementById('question-area');
+                        qArea.innerHTML = '';
+                        document.getElementById('result').innerHTML = '';
+
+                        const progressDiv = document.createElement('div');
+                        progressDiv.id = 'quiz-progress';
+                        progressDiv.textContent = `문제 ${currentQuestionIndex + 1} / ${totalQuestions}`;
+                        qArea.appendChild(progressDiv);
+
+                        const title = document.createElement('h2');
+                        title.className = 'question-title';
+                        title.innerHTML = escapeHTML(question.title);
+                        qArea.appendChild(title);
+
+                        if (question.img && question.img.trim() !== '본인이 직접 정리해보세요!!!') {
+                            const imgPath = question.img.trim().substring(1);
+                            const img = document.createElement('img');
+                            img.className = 'question-img';
+                            img.src = imgPath;
+                            img.alt = '문제 이미지';
+                            qArea.appendChild(img);
+                        }
+
+                        if (question.type === '객관식') {
+                            const optionsDiv = document.createElement('div');
+                            optionsDiv.className = 'answer-options';
+                            ['select1', 'select2', 'select3', 'select4'].forEach(key => {
+                                if (question[key]) {
+                                    const optionLabel = document.createElement('label');
+                                    optionLabel.innerHTML = `<input type="radio" name="answer" value="${escapeHTML(question[key].trim())}"> ${escapeHTML(question[key].trim())}`;
+                                    optionsDiv.appendChild(optionLabel);
+                                }
+                            });
+                            qArea.appendChild(optionsDiv);
+                        } else if (question.type === '주관식') {
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.id = 'user-answer';
+                            input.className = 'answer-input';
+                            input.placeholder = '답변을 입력하세요';
+                            qArea.appendChild(input);
+                        }
+
+                        if (question.tag) {
+                            const tagDiv = document.createElement('div');
+                            tagDiv.id = 'quiz-tag';
+                            tagDiv.textContent = `태그: ${question.tag.split(',').map(tag => tag.trim()).join(', ')}`;
+                            qArea.appendChild(tagDiv);
+                        }
+                        
+                        // 버튼 영역: 왼쪽(제출/다음), 오른쪽(정답 처리)
+                        const buttonGroup = document.createElement('div');
+                        buttonGroup.className = 'button-group';
+
+                        const leftButtons = document.createElement('div');
+                        leftButtons.className = 'left-buttons button-row';
+
+                        const rightButtons = document.createElement('div');
+                        rightButtons.className = 'right-buttons button-row';
+                        
+                        const submitBtn = document.createElement('button');
+                        submitBtn.id = 'submit-btn';
+                        submitBtn.textContent = '정답 확인';
+                        submitBtn.onclick = () => checkAnswer(question);
+                        leftButtons.appendChild(submitBtn);
+
+                        const nextBtn = document.createElement('button');
+                        nextBtn.id = 'next-btn';
+                        nextBtn.textContent = '다음 문제';
+                        nextBtn.style.display = 'none';
+                        nextBtn.onclick = () => {
+                            if (currentQuestionIndex < questions.length - 1) {
+                                currentQuestionIndex++;
+                                displayQuestion(questions[currentQuestionIndex]);
+                            } else {
+                                const quizSummary = document.getElementById('quiz-summary');
+                                quizSummary.innerHTML = `
+                                    <p>정답: ${correctAnswers}개</p>
+                                    <p>총 문제: ${totalQuestions}개</p>
+                                `;
+                                document.getElementById('question-area').style.display = 'none';
+                                document.getElementById('result').style.display = 'none';
+                                document.getElementById('completion-message').style.display = 'block';
+                            }
+                        };
+                        leftButtons.appendChild(nextBtn);
+
+                        const correctBtn = document.createElement('button');
+                        correctBtn.id = 'correct-btn';
+                        correctBtn.textContent = '정답 처리';
+                        correctBtn.style.display = 'none';
+                        correctBtn.onclick = () => {
+                            correctAnswers++;
+                            document.getElementById('result').className = 'correct';
+                            document.getElementById('result').innerHTML = '✅ 정답으로 처리되었습니다!';
+                            document.getElementById('correct-btn').style.display = 'none';
+                            document.getElementById('next-btn').style.display = 'inline-block';
+                        };
+                        rightButtons.appendChild(correctBtn);
+
+                        buttonGroup.appendChild(leftButtons);
+                        buttonGroup.appendChild(rightButtons);
+                        qArea.appendChild(buttonGroup);
+                    }
+
+                    function checkAnswer(question) {
+                        const resultDiv = document.getElementById('result');
+                        resultDiv.innerHTML = '';
+                        resultDiv.className = '';
+                        
+                        let userAnswer = '';
+                        if (question.type === '객관식') {
+                            const selectedOption = document.querySelector('input[name="answer"]:checked');
+                            if (selectedOption) {
+                                userAnswer = selectedOption.value.trim();
+                                document.querySelectorAll('input[name="answer"]').forEach(input => {
+                                    input.disabled = true;
+                                });
+                            }
+                        } else if (question.type === '주관식') {
+                            const input = document.getElementById('user-answer');
+                            userAnswer = input.value.trim();
+                            input.disabled = true;
+                        }
+                        document.getElementById('submit-btn').style.display = 'none';
+
+                        let correctAnswer = question.answer.trim();
+                        if (correctAnswer.startsWith('"') && correctAnswer.endsWith('"')) {
+                             correctAnswer = correctAnswer.slice(1, -1);
+                        }
+                        
+                        const possibleAnswers = correctAnswer.split(',').map(ans => ans.trim().toLowerCase());
+
+                        if (possibleAnswers.includes(userAnswer.toLowerCase())) {
+                            resultDiv.className = 'correct';
+                            resultDiv.innerHTML = '✅ 정답입니다!';
+                            correctAnswers++;
+                            document.getElementById('next-btn').style.display = 'inline-block';
+                            document.getElementById('correct-btn').style.display = 'none';
+                        } else {
+                            resultDiv.className = 'incorrect';
+                            resultDiv.innerHTML = `❌ 오답입니다!<br>정답: ${escapeHTML(correctAnswer)}`;
+                            // 오답인 경우: 왼쪽에 "다음 문제", 오른쪽에 "정답 처리"
+                            document.getElementById('next-btn').style.display = 'inline-block';
+                            document.getElementById('correct-btn').style.display = 'inline-block';
+                        }
+
+                        if (question.description) {
+                            const descriptionDiv = document.createElement('div');
+                            descriptionDiv.id = 'description';
+                            descriptionDiv.innerHTML = `<span id="description-header">설명</span><br>${escapeHTML(question.description).replace(/\\n/g, '<br>')}`;
+                            resultDiv.appendChild(descriptionDiv);
+                        }
+                    }
+
+                    function parseCSV(csvText) {
+                        const lines = csvText.split('\r\n');
+                        const headers = lines[0].split(',');
+                        const data = [];
+                        for (let i = 1; i < lines.length; i++) {
+                            const currentLine = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                            if (currentLine.length === headers.length) {
+                                const row = {};
+                                for (let j = 0; j < headers.length; j++) {
+                                    row[headers[j].trim()] = currentLine[j].trim().replace(/^"|"$/g, '');
+                                }
+                                data.push(row);
+                            }
+                        }
+                        return data;
+                    }
+
+                    document.getElementById('restart-btn').addEventListener('click', () => {
+                       startQuiz();
+                    });
+                })
+                .catch(error => {
+                    console.error('퀴즈 데이터를 불러오는 중 오류가 발생했습니다:', error);
+                    document.getElementById('question-area').innerHTML = `<p style="text-align:center; color:red;">퀴즈 데이터를 불러올 수 없습니다. 파일(questions.csv)이 올바른 위치에 있는지, 또는 내용이 올바른지 확인해주세요.</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
