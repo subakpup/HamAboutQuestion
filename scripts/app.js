@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 shuffleArray(questions);
                 correctAnswers = 0;
                 currentQuestionIndex = 0;
-                document.getElementById('result').style.display = 'block';
+                document.getElementById('result').style.display = 'none';
                 document.getElementById('question-area').style.display = 'block';
                 document.getElementById('completion-message').style.display = 'none';
                 displayQuestion(questions[currentQuestionIndex]);
@@ -61,30 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return div.innerHTML;
             }
 
-            function stripQuotes(s) {
-                if (!s) return '';
-                s = s.trim();
-                if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
-                    return s.slice(1, -1);
-                }
-                return s;
-            }
-
-            function resolveImagePath(raw) {
-                if (!raw) return null;
-                let p = stripQuotes(String(raw)).replace(/\\/g, '/').trim();
-                if (!p) return null;
-                p = p.replace(/^\/+/, '');
-
-                if (p.startsWith('assets/')) return `./${p}`;
-                if (p.startsWith('images/')) return `./assets/${p}`;
-                return `./assets/images/${p}`;
-            }
-
             function displayQuestion(question) {
                 const qArea = document.getElementById('question-area');
                 qArea.innerHTML = '';
-                document.getElementById('result').innerHTML = '';
+
+                const result = document.getElementById('result');
+                result.innerHTML = '';
+                result.className = '';
+                result.style.display = 'none';
 
                 const progressDiv = document.createElement('div');
                 progressDiv.id = 'quiz-progress';
@@ -96,8 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 title.innerHTML = escapeHTML(question.title);
                 qArea.appendChild(title);
 
-                const imgPath = resolveImagePath(question.img);
-                if (imgPath) {
+                if (question.img) {
+                    const rawPath = question.img.trim().replace(/^\/+/, ''); 
+                    const imgPath = './assets/' + rawPath;
                     const img = document.createElement('img');
                     img.className = 'question-img';
                     img.src = imgPath;
@@ -175,8 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 correctBtn.style.display = 'none';
                 correctBtn.onclick = () => {
                     correctAnswers++;
-                    document.getElementById('result').className = 'correct';
-                    document.getElementById('result').innerHTML = '✅ 정답으로 처리되었습니다!';
+                    result.className = 'correct';
+                    result.innerHTML = '✅ 정답으로 처리되었습니다!';
+                    result.style.display = 'block';
                     document.getElementById('correct-btn').style.display = 'none';
                     document.getElementById('next-btn').style.display = 'inline-block';
                 };
@@ -191,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const resultDiv = document.getElementById('result');
                 resultDiv.innerHTML = '';
                 resultDiv.className = '';
+                resultDiv.style.display = 'block';
 
                 let userAnswer = '';
                 if (question.type === '객관식') {
@@ -206,13 +193,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 document.getElementById('submit-btn').style.display = 'none';
 
-                let correctAnswer = stripQuotes(question.answer);
+                let correctAnswer = question.answer.trim();
+                if (correctAnswer.startsWith('"') && correctAnswer.endsWith('"')) {
+                    correctAnswer = correctAnswer.slice(1, -1);
+                }
 
-                const isCorrect = (userAnswer || '').trim().toLowerCase() === correctAnswer.trim().toLowerCase();
-
-                if (isCorrect) {
+                if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
                     resultDiv.className = 'correct';
-                    resultDiv.textContent = '✅ 정답입니다!';
+                    resultDiv.innerHTML = '✅ 정답입니다!';
                     correctAnswers++;
                     document.getElementById('next-btn').style.display = 'inline-block';
                     document.getElementById('correct-btn').style.display = 'none';
@@ -232,16 +220,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             function parseCSV(csvText) {
-                const lines = csvText.split(/\r?\n/);
+                const lines = csvText.split('\r\n');
                 const headers = lines[0].split(',');
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i]) continue;
                     const currentLine = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (currentLine.length === headers.length) {
                         const row = {};
                         for (let j = 0; j < headers.length; j++) {
-                            row[headers[j].trim()] = currentLine[j]?.trim().replace(/^"|"$/g, '') ?? '';
+                            row[headers[j].trim()] = currentLine[j].trim().replace(/^"|"$/g, '');
                         }
                         data.push(row);
                     }
