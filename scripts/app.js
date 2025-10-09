@@ -61,6 +61,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 return div.innerHTML;
             }
 
+            function stripQuotes(s) {
+                if (!s) return '';
+                s = s.trim();
+                if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+                    return s.slice(1, -1);
+                }
+                return s;
+            }
+
+            function resolveImagePath(raw) {
+                if (!raw) return null;
+                let p = stripQuotes(String(raw)).replace(/\\/g, '/').trim();
+                if (!p) return null;
+                p = p.replace(/^\/+/, '');
+
+                if (p.startsWith('assets/')) return `./${p}`;
+                if (p.startsWith('images/')) return `./assets/${p}`;
+                return `./assets/images/${p}`;
+            }
+
             function displayQuestion(question) {
                 const qArea = document.getElementById('question-area');
                 qArea.innerHTML = '';
@@ -76,9 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 title.innerHTML = escapeHTML(question.title);
                 qArea.appendChild(title);
 
-                if (question.img && question.img.trim() !== '본인이 직접 정리해보세요!!!') {
-                    const rawPath = question.img.trim().replace(/^\/+/, ''); 
-                    const imgPath = './assets/' + rawPath;
+                const imgPath = resolveImagePath(question.img);
+                if (imgPath) {
                     const img = document.createElement('img');
                     img.className = 'question-img';
                     img.src = imgPath;
@@ -187,16 +206,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 document.getElementById('submit-btn').style.display = 'none';
 
-                let correctAnswer = question.answer.trim();
-                if (correctAnswer.startsWith('"') && correctAnswer.endsWith('"')) {
-                    correctAnswer = correctAnswer.slice(1, -1);
-                }
+                let correctAnswer = stripQuotes(question.answer);
 
-                const possibleAnswers = correctAnswer.split(',').map(ans => ans.trim().toLowerCase());
+                const isCorrect = (userAnswer || '').trim().toLowerCase() === correctAnswer.trim().toLowerCase();
 
-                if (possibleAnswers.includes(userAnswer.toLowerCase())) {
+                if (isCorrect) {
                     resultDiv.className = 'correct';
-                    resultDiv.innerHTML = '✅ 정답입니다!';
+                    resultDiv.textContent = '✅ 정답입니다!';
                     correctAnswers++;
                     document.getElementById('next-btn').style.display = 'inline-block';
                     document.getElementById('correct-btn').style.display = 'none';
@@ -216,15 +232,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             function parseCSV(csvText) {
-                const lines = csvText.split('\r\n');
+                const lines = csvText.split(/\r?\n/);
                 const headers = lines[0].split(',');
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i]) continue;
                     const currentLine = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (currentLine.length === headers.length) {
                         const row = {};
                         for (let j = 0; j < headers.length; j++) {
-                            row[headers[j].trim()] = currentLine[j].trim().replace(/^"|"$/g, '');
+                            row[headers[j].trim()] = currentLine[j]?.trim().replace(/^"|"$/g, '') ?? '';
                         }
                         data.push(row);
                     }
