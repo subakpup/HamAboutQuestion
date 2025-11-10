@@ -1,25 +1,24 @@
 title,type,select1,select2,select3,select4,answer,img,level,date,recommenddate,update,description,solveddate,tag
-Given-When-Then 패턴에서 각각이 무엇을 뜻하는지 쓰시오,주관식,,,,,"Given : 테스트를 위한 필요한 상황 준비
-When : 테스트 하는 메서드 실행
-Then : 테스트 결과 검증 ",,0,2025-11-04,2025-11-04,2025-11-04,,,Junit
-테스트 원칙에 대한 설명으로 옳지 않은 것은?,객관식,여러번 반복해서 테스트를 진행하더라도 동일하게 동작해야 한다,@SpringBootTest는 슬라이스 테스트로 단위 테스트에 사용하기 적합하다,어떤 순서로 테스트를 하더라도 언제나 테스트는 성공해야 한다,테스트 자체 만으로 검증이 완료되어야 한다,@SpringBootTest는 슬라이스 테스트로 단위 테스트에 사용하기 적합하다,,0,2025-11-04,2025-11-04,2025-11-04,,,JUnit
-다음 코드 실행 결과로 콘솔에 출력되는 로그 레벨을 쓰시오,주관식,,,,,"INFO,WARN,ERROR",/images/id-1qn73txa2.png,0,2025-11-04,2025-11-04,2025-11-04,,,Logging
-JUnit 테스트 코드에 대한 설명으로 틀린 것은?,객관식,@BeforeEach 는 각 테스트 실행 전마다 실행된다,@AfterAll은 클래스 내 모든 테스트가 끝난 뒤 한 번 실행된다,assertThrows()는 특정 메서드가 예외를 던지는지 검사한다,"assertEquals() 첫번째 인자는 실제값, 두번째 인자는 기대값이다 ","assertEquals() 첫번째 인자는 실제값, 두번째 인자는 기대값이다 ",,0,2025-11-04,2025-11-04,2025-11-04,,,JUnit
-다음 중 Logback의 logback.xml 설정에 대한 설명으로 옳지 않은 것은?,객관식,<appender>는 로그를 어디로 보낼지 정의한다,<encoder>는 로그 메세지의 형식을 지정한다,"<root level=""INFO"">는 INFO이하의 로그를 모두 출력한다",<rollingPolicy>는 롤링 정책을 지정한다,"<root level=""INFO"">는 INFO이하의 로그를 모두 출력한다",,0,2025-11-04,2025-11-04,2025-11-04,,,Logging
-
-"application.properties 파일이 아래와 같고, SystemInfo 빈이 로드되었을 때, info.getDetails()의 출력 결과로 올바른 것은?",객관식,${system.name} | ${system.admin:admin} | v9.0,SSAFY | admin | v9.0,SSAFY | admin | v${version},SSAFY | null | v9.0,SSAFY | admin | v9.0,"1. ${...} : system.name은 프로퍼티 파일에서 ""SSAFY"" 값을 찾아 name 필드에 주입합니다.
+"application.properties 파일이 아래와 같고, SystemInfo 빈이 로드되었을 때, info.getDetails()의 출력 결과로 올바른 것은?",객관식,${system.name} | ${system.admin:admin} | v9.0,SSAFY | admin | v9.0,SSAFY | admin | v${version},SSAFY | null | v9.0,SSAFY | admin | v9.0,/images/id-ocd3ohj9b.png,0,2025-11-10,2025-11-10,2025-11-10,"1. ${...} : system.name은 프로퍼티 파일에서 ""SSAFY"" 값을 찾아 name 필드에 주입합니다.
 
 2. ""..."" (리터럴): version 필드는 ${...} 구문이 없으므로 ""9.0"" 문자열 리터럴 자체가 주입됩니다.
 
-3. ${... : default} : system.admin 프로퍼티는 파일에 존재하지 않습니다. 이때 콜론(:) 뒤에 정의된 ""admin""이 기본값으로 admin 필드에 주입됩니다. 따라서 getDetails()는 ""SSAFY | admin | v9.0""을 반환합니다.",/images/id-ocd3ohj9b.png,0,2025-11-05,2025-11-05,2025-11-05,,"@Value,프로퍼티 주입"
-"스프링 빈(Bean)의 생명주기(Lifecycle)에서, 생성자 호출과 모든 의존성 주입이 완료된 **'직후'**에 특정 초기화 로직(예: 자원 연결, 캐시 예열)을 실행하고 싶을 때 사용하는 애너테이션은 무엇인가요?",객관식,@PostConstruct,@PreDestroy,"@Bean(initMethod = ""..."")",@Autowired,@PostConstruct,,,0,2025-11-05,2025-11-05,2025-11-05,,빈 생명주기
-"여러분이 소스 코드를 수정할 수 없는 외부 라이브러리의 클래스(예: ExternalImageProcessor)를 스프링 빈으로 등록해야 할 때, 가장 적절한 DI 방식은 무엇인가요?",객관식,묵시적 DI: 해당 라이브러리 클래스에 직접 @Component를 추가한다.,"명시적 DI: @Configuration 클래스 내부에 @Bean 메서드를 만들고, 그 안에서 new ExternalImageProcessor()를 반환한다.",필드 주입: 사용할 클래스에서 @Autowired로 ExternalImageProcessor를 바로 주입받는다.,Setter 주입: @ComponentScan으로 해당 라이브러리를 스캔한다.,"명시적 DI: @Configuration 클래스 내부에 @Bean 메서드를 만들고, 그 안에서 new ExternalImageProcessor()를 반환한다.","2번 해설: 묵시적 DI(@Component)는 우리가 소스 코드를 수정할 수 있을 때만 사용할 수 있습니다. 외부 라이브러리의 코드는 수정이 불가능하므로 @Component를 붙일 수 없습니다. 이때 명시적 DI를 사용합니다. 우리의 @Configuration 설정 파일에 @Bean이 붙은 메서드를 만들고, 그 메서드 내부에서 new ExternalImageProcessor()를 호출하여 객체를 생성한 뒤 반환하면, 스프링 컨테이너가 이 객체를 빈으로 관리해 줍니다.",,0,2025-11-05,2025-11-05,2025-11-05,,"명시적 DI,#외부 라이브러리,@Bean"
-" 묵시적 DI 방식에서 '@Component' 애너테이션의 주된 역할로 올바른 것은 무엇인가요?",객관식,명시적 DI에서 '@Bean'을 대체하여 설정 클래스에 사용된다.,"'@ComponentScan'이 스캔할 빈 대상을 표시하며, 스테레오타입 애너테이션의 기본이 된다.",오직 '@Service'나 '@Repository' 내부에서만 사용 가능하다.,이 애너테이션을 붙이면 즉시 싱글턴 빈(Bean)이 생성된다.,"'@ComponentScan'이 스캔할 빈 대상을 표시하며, 스테레오타입 애너테이션의 기본이 된다.","@Component는 ""이 클래스는 빈이 될 수 있다""는 의도만 나타낼 뿐, 실제로 빈을 만들지는 않습니다. **@ComponentScan**이 이 애너테이션이 붙은 클래스들을 스캔해야 비로소 빈으로 등록됩니다. 또한 @Service, @Repository 등 다른 모든 스테레오타입 애너테이션의 내부에 포함되는 기본 애너테이션입니다.",,0,2025-11-05,2025-11-05,2025-11-05,,묵시적 DI
-Spring에서 필드 주입(@Autowired 필드에 직접 사용)보다 생성자 주입을 권장하는 이유로 가장 적절한 것은 무엇인가요?,객관식,코드가 더 간결해지고 시각적으로 보기 좋기 때문이다.,필드 주입은 'private' 필드에는 사용할 수 없기 때문이다.,"final 키워드를 사용하여 의존성의 '불변성'을 보장하고, 테스트 코드 작성이 용이하기 때문이다.",생성자 주입만이 유일하게 순환 참조(Circular Dependency)를 해결할 수 있기 때문이다.,"final 키워드를 사용하여 의존성의 '불변성'을 보장하고, 테스트 코드 작성이 용이하기 때문이다.","생성자 주입의 가장 큰 장점은, 주입받는 필드를 final로 선언하여 불변성을 확보할 수 있다는 점입니다. 또한, 순수 Java로 테스트 코드를 작성할 때 Mock 객체를 주입하기 매우 용이합니다.
+3. ${... : default} : system.admin 프로퍼티는 파일에 존재하지 않습니다. 이때 콜론(:) 뒤에 정의된 ""admin""이 기본값으로 admin 필드에 주입됩니다. 따라서 getDetails()는 ""SSAFY | admin | v9.0""을 반환합니다.",,"@Value,프로퍼티 주입"
+"스프링 빈(Bean)의 생명주기(Lifecycle)에서, 생성자 호출과 모든 의존성 주입이 완료된 **'직후'**에 특정 초기화 로직(예: 자원 연결, 캐시 예열)을 실행하고 싶을 때 사용하는 애너테이션은 무엇인가요?",객관식,@PostConstruct,@PreDestroy,"@Bean(initMethod = ""..."")",@Autowired,@PostConstruct,,0,2025-11-10,2025-11-10,2025-11-10,,,빈 생명주기
+"여러분이 소스 코드를 수정할 수 없는 외부 라이브러리의 클래스(예: ExternalImageProcessor)를 스프링 빈으로 등록해야 할 때, 가장 적절한 DI 방식은 무엇인가요?",객관식,묵시적 DI: 해당 라이브러리 클래스에 직접 @Component를 추가한다.,"명시적 DI: @Configuration 클래스 내부에 @Bean 메서드를 만들고, 그 안에서 new ExternalImageProcessor()를 반환한다.",필드 주입: 사용할 클래스에서 @Autowired로 ExternalImageProcessor를 바로 주입받는다.,Setter 주입: @ComponentScan으로 해당 라이브러리를 스캔한다.,"명시적 DI: @Configuration 클래스 내부에 @Bean 메서드를 만들고, 그 안에서 new ExternalImageProcessor()를 반환한다.",,0,2025-11-10,2025-11-10,2025-11-10,"2번 해설: 묵시적 DI(@Component)는 우리가 소스 코드를 수정할 수 있을 때만 사용할 수 있습니다. 외부 라이브러리의 코드는 수정이 불가능하므로 @Component를 붙일 수 없습니다. 이때 명시적 DI를 사용합니다. 우리의 @Configuration 설정 파일에 @Bean이 붙은 메서드를 만들고, 그 메서드 내부에서 new ExternalImageProcessor()를 호출하여 객체를 생성한 뒤 반환하면, 스프링 컨테이너가 이 객체를 빈으로 관리해 줍니다.",,"명시적 DI,#외부 라이브러리,@Bean"
+" 묵시적 DI 방식에서 '@Component' 애너테이션의 주된 역할로 올바른 것은 무엇인가요?",객관식,명시적 DI에서 '@Bean'을 대체하여 설정 클래스에 사용된다.,"'@ComponentScan'이 스캔할 빈 대상을 표시하며, 스테레오타입 애너테이션의 기본이 된다.",오직 '@Service'나 '@Repository' 내부에서만 사용 가능하다.,이 애너테이션을 붙이면 즉시 싱글턴 빈(Bean)이 생성된다.,"'@ComponentScan'이 스캔할 빈 대상을 표시하며, 스테레오타입 애너테이션의 기본이 된다.",,0,2025-11-10,2025-11-10,2025-11-10,"@Component는 ""이 클래스는 빈이 될 수 있다""는 의도만 나타낼 뿐, 실제로 빈을 만들지는 않습니다. **@ComponentScan**이 이 애너테이션이 붙은 클래스들을 스캔해야 비로소 빈으로 등록됩니다. 또한 @Service, @Repository 등 다른 모든 스테레오타입 애너테이션의 내부에 포함되는 기본 애너테이션입니다.",,묵시적 DI
+Spring에서 필드 주입(@Autowired 필드에 직접 사용)보다 생성자 주입을 권장하는 이유로 가장 적절한 것은 무엇인가요?,객관식,코드가 더 간결해지고 시각적으로 보기 좋기 때문이다.,필드 주입은 'private' 필드에는 사용할 수 없기 때문이다.,"final 키워드를 사용하여 의존성의 '불변성'을 보장하고, 테스트 코드 작성이 용이하기 때문이다.",생성자 주입만이 유일하게 순환 참조(Circular Dependency)를 해결할 수 있기 때문이다.,"final 키워드를 사용하여 의존성의 '불변성'을 보장하고, 테스트 코드 작성이 용이하기 때문이다.",,0,2025-11-10,2025-11-10,2025-11-10,"생성자 주입의 가장 큰 장점은, 주입받는 필드를 final로 선언하여 불변성을 확보할 수 있다는 점입니다. 또한, 순수 Java로 테스트 코드를 작성할 때 Mock 객체를 주입하기 매우 용이합니다.
 
 
 1번은 오히려 필드 주입이 더 간결해 보입니다.
 
 2번은 틀렸습니다. 필드 주입도 private 필드에 잘 동작합니다.
 
-4번은 틀렸습니다. 생성자 주입은 순환 참조를 '해결'하는 것이 아니라, 빈 생성 시점에 오류를 발생시켜 즉시 발견하게 해줍니다.",,0,2025-11-05,2025-11-05,2025-11-05,,DI 주입 방식
+4번은 틀렸습니다. 생성자 주입은 순환 참조를 '해결'하는 것이 아니라, 빈 생성 시점에 오류를 발생시켜 즉시 발견하게 해줍니다.",,DI 주입 방식
+Given-When-Then 패턴에서 각각이 무엇을 뜻하는지 쓰시오,주관식,,,,,"Given : 테스트를 위한 필요한 상황 준비
+When : 테스트 하는 메서드 실행
+Then : 테스트 결과 검증 ",,0,2025-11-10,2025-11-10,2025-11-10,,,Junit
+테스트 원칙에 대한 설명으로 옳지 않은 것은?,객관식,여러번 반복해서 테스트를 진행하더라도 동일하게 동작해야 한다,@SpringBootTest는 슬라이스 테스트로 단위 테스트에 사용하기 적합하다,어떤 순서로 테스트를 하더라도 언제나 테스트는 성공해야 한다,테스트 자체 만으로 검증이 완료되어야 한다,@SpringBootTest는 슬라이스 테스트로 단위 테스트에 사용하기 적합하다,,0,2025-11-10,2025-11-10,2025-11-10,,,JUnit
+다음 코드 실행 결과로 콘솔에 출력되는 로그 레벨을 쓰시오,주관식,,,,,"INFO,WARN,ERROR",/images/id-1qn73txa2.png,0,2025-11-10,2025-11-10,2025-11-10,,,Logging
+JUnit 테스트 코드에 대한 설명으로 틀린 것은?,객관식,@BeforeEach 는 각 테스트 실행 전마다 실행된다,@AfterAll은 클래스 내 모든 테스트가 끝난 뒤 한 번 실행된다,assertThrows()는 특정 메서드가 예외를 던지는지 검사한다,"assertEquals() 첫번째 인자는 실제값, 두번째 인자는 기대값이다 ","assertEquals() 첫번째 인자는 실제값, 두번째 인자는 기대값이다 ",,0,2025-11-10,2025-11-10,2025-11-10,,,JUnit
+다음 중 Logback의 logback.xml 설정에 대한 설명으로 옳지 않은 것은?,객관식,<appender>는 로그를 어디로 보낼지 정의한다,<encoder>는 로그 메세지의 형식을 지정한다,"<root level=""INFO"">는 INFO이하의 로그를 모두 출력한다",<rollingPolicy>는 롤링 정책을 지정한다,"<root level=""INFO"">는 INFO이하의 로그를 모두 출력한다",,0,2025-11-10,2025-11-10,2025-11-10,,,Logging
