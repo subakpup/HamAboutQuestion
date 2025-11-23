@@ -139,9 +139,9 @@ Spring에서 필드 주입(@Autowired 필드에 직접 사용)보다 생성자 �
 Given-When-Then 패턴에서 각각이 무엇을 뜻하는지 쓰시오,주관식,,,,,"Given : 테스트를 위한 필요한 상황 준비
 When : 테스트 하는 메서드 실행
 Then : 테스트 결과 검증 ",,0,2025-11-21,2025-11-21,2025-11-21,,,Junit
-테스트 원칙에 대한 설명으로 옳지 않은 것은?,객관식,여러번 반복해서 테스트를 진행하더라도 동일하게 동작해야 한다,@SpringBootTest는 슬라이스 테스트로 단위 테스트에 사용하기 적합하다,어떤 순서로 테스트를 하더라도 언제나 테스트는 성공해야 한다,테스트 자체 만으로 검증이 완료되어야 한다,@SpringBootTest는 슬라이스 테스트로 단위 테스트에 사용하기 적합하다,,0,2025-11-21,2025-11-21,2025-11-21,,,JUnit
-다음 코드 실행 결과로 콘솔에 출력되는 로그 레벨을 쓰시오,주관식,,,,,"INFO,WARN,ERROR",/images/id-1qn73txa2.png,0,2025-11-21,2025-11-21,2025-11-21,,,Logging
-JUnit 테스트 코드에 대한 설명으로 틀린 것은?,객관식,@BeforeEach 는 각 테스트 실행 전마다 실행된다,@AfterAll은 클래스 내 모든 테스트가 끝난 뒤 한 번 실행된다,assertThrows()는 특정 메서드가 예외를 던지는지 검사한다,"assertEquals() 첫번째 인자는 실제값, 두번째 인자는 기대값이다 ","assertEquals() 첫번째 인자는 실제값, 두번째 인자는 기대값이다 ",,0,2025-11-21,2025-11-21,2025-11-21,,,JUnit
+테스트 원칙에 대한 설명으로 옳지 않은 것은?,객관식,여러번 반복해서 테스트를 진행하더라도 동일하게 동작해야 한다,@SpringBootTest는 슬라이스 테스트로 단위 테스트에 사용하기 적합하다,어떤 순서로 테스트를 하더라도 언제나 테스트는 성공해야 한다,테스트 자체 만으로 검증이 완료되어야 한다,슬라이스 테스트는 @WebMvcTest(컨트롤러) @DataJpaTest(리포지토리)처럼 특정 레이어만 잘라서 테스트하는 걸 말함.,,0,2025-11-21,2025-11-21,2025-11-21,,,JUnit
+다음 코드 실행 결과로 콘솔에 출력되는 로그 레벨을 쓰시오,주관식,,,,,"INFO,WARN,ERROR",/images/id-1qn73txa2.png,0,2025-11-21,2025-11-21,2025-11-21,,"<root level=""INFO"">로 설정하면: INFO, WARN, ERROR가 출력",Logging
+JUnit 테스트 코드에 대한 설명으로 틀린 것은?,객관식,@BeforeEach 는 각 테스트 실행 전마다 실행된다,@AfterAll은 클래스 내 모든 테스트가 끝난 뒤 한 번 실행된다,assertThrows()는 특정 메서드가 예외를 던지는지 검사한다,"assertEquals() 첫번째 인자는 실제값, 두번째 인자는 기대값이다 ","assertEquals() 첫번째 인자는 기대값, 두번째 인자는 실제값이다 ",,0,2025-11-21,2025-11-21,2025-11-21,,,JUnit
 다음 중 Logback의 logback.xml 설정에 대한 설명으로 옳지 않은 것은?,객관식,<appender>는 로그를 어디로 보낼지 정의한다,<encoder>는 로그 메세지의 형식을 지정한다,"<root level=""INFO"">는 INFO이하의 로그를 모두 출력한다",<rollingPolicy>는 롤링 정책을 지정한다,"<root level=""INFO"">는 INFO이하의 로그를 모두 출력한다",,0,2025-11-21,2025-11-21,2025-11-21,,,Logging
 Filter와 Interceptor의 차이로 옳은 것은?,객관식,Filter는 HTTP 요청 수준에서 Spring과 무관하게 동작한다.,Filter는 Spring 내부에서만 동작하고 Interceptor는 Servlet 단계에서 동작한다.,"Interceptor는 ServletRequest, ServletResponse만 접근 가능하다.",Filter는 Controller의 리턴값(ModelAndView)에도 접근할 수 있다.,Filter는 HTTP 요청 수준에서 Spring과 무관하게 동작한다.,,0,2025-11-21,2025-11-21,2025-11-21,,,Filter
 Filter에서 자주 사용하는 기능으로 적절하지 않은 것은?,객관식,인코딩 설정,요청 로깅(logging),인증/인가 체크,비즈니스 로직 실행 및 DB CRUD 수행,비즈니스 로직 실행 및 DB CRUD 수행,,0,2025-11-21,2025-11-21,2025-11-21,,,Filter
@@ -241,4 +241,4 @@ Swagger(OpenAPI)의 주요 목적은 무엇인가?,객관식,서버의 로그 �
 Spring Web MVC에서 클라이언트의 HTTP 요청이 들어와서 응답이 나갈 때까지의 일반적인 처리 순서로 올바른것은?,객관식,Filter -> DispatcherServlet -> Interceptor -> Controller,DispatcherServlet -> Filter -> Interceptor -> Controller,Filter -> Interceptor -> DispatcherServlet -> Controller,Interceptor -> DispatcherServlet -> Filter -> Controller,Filter -> DispatcherServlet -> Interceptor -> Controller,,0,2025-11-21,2025-11-21,2025-11-21,"요청은 가장 바깥쪽의 Filter(Web Context)를 거쳐 DispatcherServlet에 도달합니다. 이후 핸들러 매핑을 통해 컨트롤러가 결정되면, 실행 직전에 Interceptor(Spring Context)를 통과하여 최종적으로 Controller에 도달합니다.",,스프링 & webmvc 요청처리 흐름
 "REST 서비스 작성 시 ResponseEntity 객체를 사용하는 이유는? ",주관식,,,,,"Rest형식의 서비스 결과를 Http 상태 코드와 함께 전송하기 위해 사용합니다 ",,0,2025-11-21,2025-11-21,2025-11-21,,,RESTAPI
 "@ModelAttribute로 파라미터를 받았을때 Content-Type은? ",주관식,,,,,application/x-www-form-urlencoded,,0,2025-11-21,2025-11-21,2025-11-21,,,RESTAPI
-"@Controller와 @ResponseBody를 합쳐서 쓰기 위한 REST API를 위한 annotation은? ",주관식,,,,,@ResponseBody,,0,2025-11-21,2025-11-21,2025-11-21,,,RESTAPI
+"@Controller와 @ResponseBody를 합쳐서 쓰기 위한 REST API를 위한 annotation은? ",주관식,,,,,@RestController,,0,2025-11-21,2025-11-21,2025-11-21,,,RESTAPI
